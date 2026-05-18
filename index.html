@@ -1,354 +1,1770 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>پلتفرم هوشمند انرژی — ایران نت هاب</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>هوشمند‌سازی انرژی صنعتی — Hyneto Energy Intelligence</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg:#07111f;
-  --bg2:#0d1729;
-  --bg3:#121f35;
-  --card:#0f1b30;
-  --border:rgba(80,190,255,.18);
-  --accent:#00d4ff;
-  --accent2:#2f80ed;
-  --danger:#ff4d6d;
-  --warning:#ffb020;
-  --success:#35d07f;
-  --text:#eef7ff;
-  --muted:#8ea3bc;
-  --soft:#d7e7f7;
-  --font:'Vazirmatn', Tahoma, Arial, sans-serif;
+  --bg-primary: #08111f;
+  --bg-secondary: #0f1a2e;
+  --bg-tertiary: #14213d;
+  --card-bg: #0d1929;
+  --border-color: rgba(100, 200, 255, 0.15);
+  --accent-cyan: #00d4ff;
+  --accent-blue: #2563eb;
+  --accent-purple: #7c3aed;
+  --accent-green: #10b981;
+  --alert-red: #ef4444;
+  --warning-orange: #f97316;
+  --success-green: #22c55e;
+  --text-primary: #f0f4f9;
+  --text-muted: #94a3b8;
+  --text-light: #cbd5e1;
+  --solar-yellow: #eab308;
+  --ups-purple: #a855f7;
+  --gen-orange: #f97316;
+  --grid-gray: #6b7280;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font);overflow-x:hidden}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Animated background grid */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
   background-image:
-    radial-gradient(circle at 20% 0%, rgba(0,212,255,.13), transparent 32%),
-    radial-gradient(circle at 85% 12%, rgba(47,128,237,.18), transparent 34%),
-    linear-gradient(rgba(0,212,255,.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,212,255,.035) 1px, transparent 1px);
-  background-size:auto,auto,42px 42px,42px 42px;
+    radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05), transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(124, 58, 237, 0.05), transparent 40%),
+    linear-gradient(180deg, rgba(0, 212, 255, 0.02), transparent);
+  background-size: 100% 100%;
 }
-.layout{position:relative;z-index:1;display:flex;flex-direction:row-reverse;min-height:100vh;width:100%}
-.sidebar{
-  width:255px;min-width:255px;background:rgba(9,17,32,.92);border-left:1px solid var(--border);
-  padding:22px 0;display:flex;flex-direction:column;backdrop-filter:blur(18px);
-}
-.logo{padding:0 20px 22px;border-bottom:1px solid var(--border);margin-bottom:18px;text-align:center}
-.logo img{max-width:92px;height:auto;display:block;margin:0 auto 8px;filter:drop-shadow(0 0 18px rgba(0,212,255,.18))}
-.logo-title{font-weight:900;color:var(--accent);font-size:18px;letter-spacing:.5px}
-.logo-sub{color:var(--muted);font-size:12px;margin-top:3px}
-.nav-section{padding:0 13px;margin-bottom:12px}
-.nav-label{font-size:11px;color:var(--muted);letter-spacing:1.5px;margin:12px 12px 8px;text-transform:uppercase}
-.nav-item{
-  display:flex;align-items:center;gap:10px;padding:11px 13px;border-radius:12px;
-  color:var(--muted);font-size:14px;border:1px solid transparent;transition:.18s
-}
-.nav-item:hover,.nav-item.active{background:rgba(0,212,255,.08);color:var(--accent);border-color:rgba(0,212,255,.22)}
-.nav-dot{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
-.pulse{animation:pulse 1.8s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
-.sidebar-footer{margin-top:auto;padding:18px 22px;border-top:1px solid var(--border);color:var(--muted);font-size:12px}
-.live-badge{display:inline-flex;align-items:center;gap:6px;color:var(--success);background:rgba(53,208,127,.1);border:1px solid rgba(53,208,127,.32);padding:5px 12px;border-radius:20px;font-weight:700;margin-bottom:10px}
-.live-dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 1.5s infinite}
 
-.main{flex:1;min-width:0;padding:24px 26px 32px;overflow:hidden}
-.mobile-header{display:none}
-.topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
-.page-title{font-size:28px;font-weight:900;letter-spacing:-.5px;line-height:1.25}
-.page-subtitle{font-size:13px;color:var(--muted);margin-top:5px}
-.topbar-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-.badge,.time-display{
-  background:rgba(18,31,53,.86);border:1px solid var(--border);border-radius:12px;padding:10px 14px;color:var(--soft);
-  font-size:13px;white-space:nowrap
+.layout {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: row-reverse;
+  min-height: 100vh;
+  width: 100%;
 }
-.time-display{color:var(--accent);font-weight:800;direction:ltr}
 
-.kpi-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin-bottom:18px}
-.kpi-card{
-  background:linear-gradient(180deg,rgba(18,31,53,.96),rgba(12,24,42,.96));border:1px solid var(--border);
-  border-radius:16px;padding:16px;position:relative;overflow:hidden;box-shadow:0 14px 32px rgba(0,0,0,.18)
+/* Sidebar Navigation */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: rgba(8, 17, 31, 0.85);
+  backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border-color);
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 1px 0 0 rgba(100, 200, 255, 0.08);
 }
-.kpi-card::before{content:"";position:absolute;top:0;right:0;left:0;height:3px;background:var(--kpi-color,var(--accent))}
-.kpi-label{font-size:12px;color:var(--muted);margin-bottom:9px;font-weight:700}
-.kpi-value{font-size:28px;font-weight:900;letter-spacing:-.5px;direction:ltr;display:inline-block}
-.kpi-unit{font-size:12px;color:var(--muted);margin-right:4px}
-.kpi-change{font-size:12px;margin-top:7px;color:var(--muted)}
-.kpi-change.up{color:var(--danger)}.kpi-change.down{color:var(--success)}
 
-.charts-grid{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
-.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.chart-card{
-  background:rgba(15,27,48,.94);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 18px 36px rgba(0,0,0,.18)
+.logo-section {
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 20px;
+  text-align: center;
 }
-.card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.card-title{font-weight:800;font-size:15px}
-.card-meta{font-size:12px;color:var(--muted);direction:ltr}
-.chart-wrap{position:relative;height:220px}
 
-.machine-list{display:flex;flex-direction:column;gap:8px}
-.machine-row{
-  display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;background:rgba(18,31,53,.78);
-  border:1px solid transparent;border-radius:12px;padding:11px 12px;font-size:13px
+.logo-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 12px;
+  font-size: 32px;
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.2);
 }
-.machine-row.anomaly{border-color:rgba(255,77,109,.32);background:rgba(255,77,109,.08)}
-.machine-name{font-weight:800}.machine-type{font-size:11px;color:var(--muted);margin-top:2px}
-.kw-bar-wrap{width:86px;direction:ltr;text-align:left}.kw-bar-track{height:5px;background:#07111f;border-radius:20px;overflow:hidden;margin-top:3px}.kw-bar-fill{height:100%;border-radius:20px}
-.status-pill{font-size:10px;font-weight:800;padding:4px 8px;border-radius:30px;white-space:nowrap}
-.status-pill.running{background:rgba(53,208,127,.14);color:var(--success)}.status-pill.idle{background:rgba(142,163,188,.14);color:var(--muted)}.status-pill.alert{background:rgba(255,77,109,.14);color:var(--danger)}
 
-.alert-feed{display:flex;flex-direction:column;gap:9px;max-height:350px;overflow:auto;padding-left:4px}
-.alert-item{background:rgba(18,31,53,.78);border-right:4px solid;border-radius:12px;padding:11px 12px;font-size:13px}
-.alert-item.critical{border-color:var(--danger);background:rgba(255,77,109,.07)}.alert-item.high{border-color:var(--warning);background:rgba(255,176,32,.07)}.alert-item.medium{border-color:#ffd85b}.alert-item.low{border-color:var(--muted)}
-.alert-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px}
-.alert-machine{font-weight:800}.alert-time{color:var(--muted);font-size:11px;direction:ltr}.alert-msg{color:var(--muted)}.alert-deviation{color:var(--danger);font-weight:800;direction:ltr;display:inline-block}
-.footer-cta{margin-top:16px;background:linear-gradient(135deg,rgba(0,212,255,.1),rgba(47,128,237,.12));border:1px solid var(--border);border-radius:16px;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:14px}
-.cta-title{font-weight:900;font-size:17px}.cta-text{color:var(--muted);font-size:13px;margin-top:4px}
-.cta-btn{text-decoration:none;color:white;background:linear-gradient(135deg,var(--accent2),var(--accent));padding:11px 18px;border-radius:12px;font-weight:800;white-space:nowrap}
-
-@media (max-width:1100px){
-  .kpi-grid{grid-template-columns:repeat(3,1fr)}
-  .charts-grid,.bottom-grid{grid-template-columns:1fr}
+.logo-text {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent-cyan);
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
 }
-@media (max-width:768px){
-  body{overflow-x:hidden}
-  .layout{display:block;min-height:100vh}
-  .sidebar{display:none}
-  .main{padding:14px 12px 24px;width:100%;overflow:visible}
-  .mobile-header{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(9,17,32,.92);border:1px solid var(--border);border-radius:16px;padding:10px 12px;margin-bottom:14px;position:sticky;top:8px;z-index:20;backdrop-filter:blur(16px)}
-  .mobile-brand{display:flex;align-items:center;gap:8px;min-width:0}
-  .mobile-brand img{width:38px;height:38px;object-fit:contain}
-  .mobile-brand strong{font-size:14px;color:var(--accent);display:block}
-  .mobile-brand span{font-size:11px;color:var(--muted);display:block}
-  .mobile-live{font-size:11px;color:var(--success);font-weight:900;background:rgba(53,208,127,.1);border:1px solid rgba(53,208,127,.25);padding:5px 9px;border-radius:20px;white-space:nowrap}
-  .topbar{display:block;margin-bottom:14px}
-  .page-title{font-size:22px;line-height:1.35}
-  .page-subtitle{font-size:12px}
-  .topbar-right{justify-content:stretch;margin-top:12px;display:grid;grid-template-columns:1fr;gap:8px}
-  .badge,.time-display{font-size:12px;text-align:center;padding:9px 10px}
-  .kpi-grid{grid-template-columns:1fr;gap:10px}
-  .kpi-card{padding:14px;border-radius:14px}
-  .kpi-value{font-size:25px}
-  .charts-grid,.bottom-grid{display:block}
-  .chart-card{padding:14px;margin-bottom:12px;border-radius:14px}
-  .card-header{align-items:flex-start;margin-bottom:12px}
-  .card-title{font-size:14px}
-  .chart-wrap{height:235px}
-  .machine-row{grid-template-columns:1fr;gap:8px}
-  .kw-bar-wrap{width:100%}
-  .status-pill{width:max-content}
-  .alert-feed{max-height:none;overflow:visible}
-  .footer-cta{display:block;text-align:center;padding:16px}
-  .cta-btn{display:block;margin-top:12px;width:100%}
+
+.logo-subtext {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 14px;
+}
+
+.nav-label {
+  font-size: 10px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.8px;
+  margin: 14px 12px 10px;
+  font-weight: 700;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--accent-cyan);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(37, 99, 235, 0.1));
+  color: var(--accent-cyan);
+  border-color: var(--accent-cyan);
+}
+
+.nav-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success-green);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: auto;
+  margin-bottom: 20px;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--success-green);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border-color);
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Main Content */
+.main {
+  flex: 1;
+  min-width: 0;
+  padding: 28px 32px 40px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 6px;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.page-header p {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.header-controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lang-toggle {
+  display: flex;
+  gap: 6px;
+  background: rgba(20, 33, 61, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 6px;
+}
+
+.lang-btn {
+  padding: 8px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.lang-btn.active {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+  font-weight: 700;
+}
+
+.time-badge {
+  background: rgba(20, 33, 61, 0.8);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+  font-family: 'Courier New', monospace;
+  direction: ltr;
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 3px;
+  background: var(--kpi-color, var(--accent-cyan));
+  opacity: 0.8;
+}
+
+.kpi-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.95), rgba(15, 26, 41, 0.75));
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 212, 255, 0.1);
+}
+
+.kpi-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.kpi-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  direction: ltr;
+  margin-bottom: 6px;
+}
+
+.kpi-unit {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-left: 4px;
+}
+
+.kpi-change {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.kpi-change.positive {
+  color: var(--alert-red);
+}
+
+.kpi-change.negative {
+  color: var(--success-green);
+}
+
+/* Energy Sources */
+.energy-sources {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.energy-source-card {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border: 2px solid var(--border-color);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.energy-source-card:hover {
+  border-color: currentColor;
+  transform: translateY(-2px);
+}
+
+.energy-source-card.solar {
+  --source-color: var(--solar-yellow);
+  border-color: rgba(232, 179, 8, 0.3);
+}
+
+.energy-source-card.ups {
+  --source-color: var(--ups-purple);
+  border-color: rgba(168, 85, 247, 0.3);
+}
+
+.energy-source-card.generator {
+  --source-color: var(--gen-orange);
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.energy-source-card.grid {
+  --source-color: var(--grid-gray);
+  border-color: rgba(107, 114, 128, 0.3);
+}
+
+.source-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.source-icon {
+  font-size: 28px;
+}
+
+.source-name {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.source-status {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.source-bar {
+  background: rgba(30, 40, 60, 0.8);
+  border-radius: 8px;
+  height: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.source-fill {
+  height: 100%;
+  background: var(--source-color);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+  box-shadow: 0 0 12px var(--source-color);
+}
+
+.source-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  font-size: 12px;
+}
+
+.source-stat {
+  background: rgba(0, 212, 255, 0.05);
+  border-radius: 8px;
+  padding: 8px;
+  border-left: 2px solid var(--source-color);
+}
+
+.source-stat-label {
+  color: var(--text-muted);
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+
+.source-stat-value {
+  font-weight: 700;
+  color: var(--text-primary);
+  direction: ltr;
+  font-size: 13px;
+}
+
+/* Charts Grid */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chart-card {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+}
+
+.chart-card.full {
+  grid-column: 1 / -1;
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.chart-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.chart-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  direction: ltr;
+}
+
+.chart-container {
+  position: relative;
+  height: 280px;
+  width: 100%;
+}
+
+/* Efficiency Metrics */
+.efficiency-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.metric-card {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+}
+
+.metric-icon {
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.metric-name {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.metric-value {
+  font-size: 26px;
+  font-weight: 900;
+  color: var(--accent-cyan);
+  margin-bottom: 6px;
+  direction: ltr;
+}
+
+.metric-desc {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.metric-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success-green);
+}
+
+/* Machines List */
+.machines-section {
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  color: var(--text-primary);
+}
+
+.machine-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+
+.machine-card {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 14px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.machine-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.95), rgba(15, 26, 41, 0.75));
+}
+
+.machine-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 10px;
+}
+
+.machine-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.machine-type {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.machine-status {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.machine-status.running {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--success-green);
+}
+
+.machine-status.alert {
+  background: rgba(239, 68, 68, 0.15);
+  color: var(--alert-red);
+}
+
+.machine-status.idle {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--text-muted);
+}
+
+.machine-power {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.power-value {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--accent-cyan);
+  direction: ltr;
+}
+
+.power-bar {
+  background: rgba(30, 40, 60, 0.8);
+  border-radius: 6px;
+  height: 4px;
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.power-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+  transition: width 0.3s ease;
+}
+
+/* Alerts Section */
+.alerts-section {
+  margin-bottom: 24px;
+}
+
+.alert-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.alert-item {
+  background: linear-gradient(135deg, rgba(20, 33, 61, 0.8), rgba(15, 26, 41, 0.6));
+  border-right: 4px solid;
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13px;
+}
+
+.alert-item.critical {
+  border-color: var(--alert-red);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.alert-item.high {
+  border-color: var(--warning-orange);
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.alert-item.medium {
+  border-color: var(--solar-yellow);
+  background: rgba(232, 179, 8, 0.08);
+}
+
+.alert-item.low {
+  border-color: var(--accent-blue);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.alert-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.alert-machine {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.alert-time {
+  color: var(--text-muted);
+  font-size: 11px;
+  direction: ltr;
+}
+
+.alert-message {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.alert-deviation {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--alert-red);
+  direction: ltr;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-close:hover {
+  color: var(--text-primary);
+}
+
+.modal-details {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: rgba(0, 212, 255, 0.05);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent-cyan);
+}
+
+.detail-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.detail-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    min-width: unset;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px 16px;
+    border-left: none;
+    border-bottom: 1px solid var(--border-color);
+    height: auto;
+  }
+  
+  .logo-section {
+    padding: 0;
+    border: none;
+    margin: 0 16px 0 0;
+    min-width: 140px;
+  }
+  
+  .logo-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 24px;
+  }
+  
+  .logo-text {
+    font-size: 13px;
+  }
+  
+  .nav-section {
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-label {
+    display: none;
+  }
+  
+  .nav-item {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+  
+  .status-badge {
+    margin: 0 8px 0 auto;
+  }
+  
+  .sidebar-footer {
+    display: none;
+  }
+  
+  .main {
+    padding: 16px 16px 24px;
+  }
+  
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .page-header h1 {
+    font-size: 24px;
+  }
+  
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .energy-sources {
+    grid-template-columns: 1fr;
+  }
+  
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .machine-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .efficiency-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    height: 240px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .page-header h1 {
+    font-size: 20px;
+  }
+  
+  .source-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .efficiency-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 212, 255, 0.05);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 212, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 212, 255, 0.35);
 }
 </style>
 </head>
 <body>
+
 <div class="layout">
+  <!-- Sidebar -->
   <aside class="sidebar">
-    <div class="logo">
-      <img src="data:image/png;base64,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" alt="Iran Net Hub logo" />
-      <div class="logo-title">ایران نت هاب</div>
-      <div class="logo-sub">پلتفرم هوشمند انرژی</div>
+    <div class="logo-section">
+      <div class="logo-icon">⚡</div>
+      <div class="logo-text" id="logo-text">Hyneto Energy</div>
+      <div class="logo-subtext" id="logo-subtext">عقل صنعت</div>
     </div>
+    
     <div class="nav-section">
-      <div class="nav-label">مانیتورینگ</div>
-      <div class="nav-item active"><span class="nav-dot pulse"></span>نمای کلی</div>
-      <div class="nav-item"><span class="nav-dot"></span>تجهیزات</div>
-      <div class="nav-item"><span class="nav-dot"></span>هشدارها</div>
+      <div class="nav-label" id="nav-label-main">پیمایش</div>
+      <div class="nav-item active" onclick="scrollToSection('overview')">
+        <div class="nav-dot"></div>
+        <span id="nav-overview">پیش‌نمایش</span>
+      </div>
+      <div class="nav-item" onclick="scrollToSection('sources')">
+        <div class="nav-dot"></div>
+        <span id="nav-sources">منابع انرژی</span>
+      </div>
+      <div class="nav-item" onclick="scrollToSection('machines')">
+        <div class="nav-dot"></div>
+        <span id="nav-machines">دستگاه‌ها</span>
+      </div>
+      <div class="nav-item" onclick="scrollToSection('alerts')">
+        <div class="nav-dot"></div>
+        <span id="nav-alerts">هشدارها</span>
+      </div>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">هوشمندی</div>
-      <div class="nav-item"><span class="nav-dot"></span>تحلیل هوشمند</div>
-      <div class="nav-item"><span class="nav-dot"></span>گزارش‌ها</div>
+    
+    <div class="status-badge">
+      <div class="status-dot"></div>
+      <span id="status-text">سیستم فعال</span>
     </div>
-    <div class="nav-section">
-      <div class="nav-label">زیرساخت</div>
-      <div class="nav-item"><span class="nav-dot"></span>شبکه صنعتی</div>
-      <div class="nav-item"><span class="nav-dot"></span>تنظیمات</div>
-    </div>
+    
     <div class="sidebar-footer">
-      <div class="live-badge"><span class="live-dot"></span>زنده</div>
-      <div>ناحیه صنعتی تهران #۰۰۱</div>
-      <div style="margin-top:4px">نسخه نمایشی MVP</div>
+      <div id="sidebar-footer">نسخه نمایشی v1.0 — 2025</div>
     </div>
   </aside>
-
+  
+  <!-- Main Content -->
   <main class="main">
-    <div class="mobile-header">
-      <div class="mobile-brand">
-        <img src="data:image/png;base64,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" alt="Iran Net Hub logo" />
-        <div><strong>ایران نت هاب</strong><span>داشبورد انرژی هوشمند</span></div>
-      </div>
-      <div class="mobile-live">● زنده</div>
-    </div>
-
+    <!-- Topbar -->
     <div class="topbar">
-      <div>
-        <div class="page-title">نمای کلی کارخانه هوشمند</div>
-        <div class="page-subtitle" id="subtitle">در حال دریافت داده‌های زنده...</div>
+      <div class="page-header">
+        <h1 id="page-title">هوشمند‌سازی انرژی صنعتی</h1>
+        <p id="page-subtitle">نظارت بلادرنگ و تحلیل مصرف انرژی کارخانه</p>
       </div>
-      <div class="topbar-right">
-        <div class="badge">ناحیه صنعتی تهران #۰۰۱</div>
-        <div class="time-display" id="clock">--:--:--</div>
+      <div class="header-controls">
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="lang-fa" onclick="setLanguage('fa')">فارسی</button>
+          <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">English</button>
+        </div>
+        <div class="time-badge" id="time-display">۱۲:۳۰:۴۵</div>
       </div>
     </div>
-
-    <div class="kpi-grid">
-      <div class="kpi-card" style="--kpi-color:#00d4ff"><div class="kpi-label">بار مصرفی فعلی</div><div><span class="kpi-value" id="kpi-kw">--</span><span class="kpi-unit">kW</span></div><div class="kpi-change up" id="kpi-kw-change">در حال بروزرسانی...</div></div>
-      <div class="kpi-card" style="--kpi-color:#35d07f"><div class="kpi-label">مصرف امروز</div><div><span class="kpi-value" id="kpi-kwh">--</span><span class="kpi-unit">kWh</span></div><div class="kpi-change" id="kpi-cost">در حال محاسبه...</div></div>
-      <div class="kpi-card" style="--kpi-color:#ff4d6d"><div class="kpi-label">هشدارهای فعال</div><div><span class="kpi-value" id="kpi-alerts">--</span></div><div class="kpi-change up" id="kpi-critical">-- بحرانی</div></div>
-      <div class="kpi-card" style="--kpi-color:#ffb020"><div class="kpi-label">تجهیزات فعال</div><div><span class="kpi-value" id="kpi-machines">--</span><span class="kpi-unit">/10</span></div><div class="kpi-change">خط تولید صنعتی</div></div>
-      <div class="kpi-card" style="--kpi-color:#7c3aed"><div class="kpi-label">تخمین اتلاف انرژی</div><div><span class="kpi-value" id="kpi-waste">--</span><span class="kpi-unit">kWh</span></div><div class="kpi-change up" id="kpi-waste-cost">-- هزینه روزانه</div></div>
+    
+    <!-- KPI Grid -->
+    <div class="kpi-grid" id="overview">
+      <div class="kpi-card" style="--kpi-color: #00d4ff;" onclick="showKPIDetail('total-power')">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-label" id="kpi-power-label">کل مصرف</div>
+        <div class="kpi-value"><span id="kpi-power">245</span><span class="kpi-unit">kW</span></div>
+        <div class="kpi-change" id="kpi-power-change">↓ 12.5 kW نسبت به قبل</div>
+      </div>
+      
+      <div class="kpi-card" style="--kpi-color: #eab308;" onclick="showKPIDetail('total-energy')">
+        <div class="kpi-icon">☀️</div>
+        <div class="kpi-label" id="kpi-energy-label">انرژی انباشته</div>
+        <div class="kpi-value"><span id="kpi-energy">2840</span><span class="kpi-unit">kWh</span></div>
+        <div class="kpi-change" id="kpi-energy-change">+ 185 kWh امروز</div>
+      </div>
+      
+      <div class="kpi-card" style="--kpi-color: #10b981;" onclick="showKPIDetail('renewable')">
+        <div class="kpi-icon">🌱</div>
+        <div class="kpi-label" id="kpi-renewable-label">سهم تجدیدپذیر</div>
+        <div class="kpi-value"><span id="kpi-renewable">38</span><span class="kpi-unit">%</span></div>
+        <div class="kpi-change" id="kpi-renewable-change">↑ 4% نسبت به هفته قبل</div>
+      </div>
+      
+      <div class="kpi-card" style="--kpi-color: #a855f7;" onclick="showKPIDetail('efficiency')">
+        <div class="kpi-icon">📊</div>
+        <div class="kpi-label" id="kpi-efficiency-label">بهره‌وری</div>
+        <div class="kpi-value"><span id="kpi-efficiency">82</span><span class="kpi-unit">%</span></div>
+        <div class="kpi-change" id="kpi-efficiency-change">تعادل خوب</div>
+      </div>
+      
+      <div class="kpi-card" style="--kpi-color: #ef4444;" onclick="showKPIDetail('alerts')">
+        <div class="kpi-icon">🚨</div>
+        <div class="kpi-label" id="kpi-alerts-label">هشدارها</div>
+        <div class="kpi-value"><span id="kpi-alerts-count">3</span></div>
+        <div class="kpi-change" id="kpi-alerts-change">1 بحرانی | 2 اخطار</div>
+      </div>
     </div>
-
+    
+    <!-- Energy Sources -->
+    <div id="sources">
+      <h2 class="section-title" id="sources-title">منابع انرژی</h2>
+      <div class="energy-sources">
+        <!-- Solar -->
+        <div class="energy-source-card solar" onclick="showSourceDetail('solar')">
+          <div class="source-header">
+            <div class="source-icon">☀️</div>
+            <div>
+              <div class="source-name" id="source-solar-name">پانل‌های خورشیدی</div>
+              <div class="source-status" id="source-solar-status">فعال — ابرهای کم</div>
+            </div>
+          </div>
+          <div class="source-bar">
+            <div class="source-fill" id="solar-fill" style="width: 72%"></div>
+          </div>
+          <div class="source-stats">
+            <div class="source-stat">
+              <div class="source-stat-label" id="solar-production">تولید</div>
+              <div class="source-stat-value" id="solar-value">85 kW</div>
+            </div>
+            <div class="source-stat">
+              <div class="source-stat-label" id="solar-capacity">ظرفیت</div>
+              <div class="source-stat-value">120 kWp</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Grid -->
+        <div class="energy-source-card grid" onclick="showSourceDetail('grid')">
+          <div class="source-header">
+            <div class="source-icon">🔌</div>
+            <div>
+              <div class="source-name" id="source-grid-name">برق شبکه</div>
+              <div class="source-status" id="source-grid-status">فعال — هماهنگ</div>
+            </div>
+          </div>
+          <div class="source-bar">
+            <div class="source-fill" id="grid-fill" style="width: 58%; background: #6b7280;"></div>
+          </div>
+          <div class="source-stats">
+            <div class="source-stat">
+              <div class="source-stat-label" id="grid-consumption">مصرف</div>
+              <div class="source-stat-value" id="grid-value">140 kW</div>
+            </div>
+            <div class="source-stat">
+              <div class="source-stat-label" id="grid-tariff">نرخ</div>
+              <div class="source-stat-value">250 ریال/kWh</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- UPS -->
+        <div class="energy-source-card ups" onclick="showSourceDetail('ups')">
+          <div class="source-header">
+            <div class="source-icon">🔋</div>
+            <div>
+              <div class="source-name" id="source-ups-name">سیستم UPS</div>
+              <div class="source-status" id="source-ups-status">آماده — شارژ شده</div>
+            </div>
+          </div>
+          <div class="source-bar">
+            <div class="source-fill" id="ups-fill" style="width: 94%; background: #a855f7;"></div>
+          </div>
+          <div class="source-stats">
+            <div class="source-stat">
+              <div class="source-stat-label" id="ups-charge">شارژ</div>
+              <div class="source-stat-value" id="ups-value">94%</div>
+            </div>
+            <div class="source-stat">
+              <div class="source-stat-label" id="ups-runtime">توانایی</div>
+              <div class="source-stat-value">2.5 ساعت</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Generator -->
+        <div class="energy-source-card generator" onclick="showSourceDetail('generator')">
+          <div class="source-header">
+            <div class="source-icon">🔥</div>
+            <div>
+              <div class="source-name" id="source-gen-name">ژنراتور دیزلی</div>
+              <div class="source-status" id="source-gen-status">آماده — خاموش</div>
+            </div>
+          </div>
+          <div class="source-bar">
+            <div class="source-fill" id="gen-fill" style="width: 0%; background: #f97316;"></div>
+          </div>
+          <div class="source-stats">
+            <div class="source-stat">
+              <div class="source-stat-label" id="gen-output">خروجی</div>
+              <div class="source-stat-value" id="gen-value">0 kW</div>
+            </div>
+            <div class="source-stat">
+              <div class="source-stat-label" id="gen-fuel">سوخت</div>
+              <div class="source-stat-value">450 لیتر</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Charts -->
     <div class="charts-grid">
       <div class="chart-card">
-        <div class="card-header"><div class="card-title">نمودار بار مصرفی — دو ساعت اخیر</div><div class="card-meta">زنده • هر ۳۰ ثانیه</div></div>
-        <div class="chart-wrap"><canvas id="loadChart"></canvas></div>
+        <div class="chart-header">
+          <div>
+            <div class="chart-title" id="chart-load-title">تاریخچه مصرف ساعتی</div>
+            <div class="chart-meta" id="chart-load-meta">آخرین 2 ساعت</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="loadChart"></canvas>
+        </div>
       </div>
+      
       <div class="chart-card">
-        <div class="card-header"><div class="card-title">سهم مصرف تجهیزات</div><div class="card-meta">kW فعلی</div></div>
-        <div class="chart-wrap"><canvas id="pieChart"></canvas></div>
+        <div class="chart-header">
+          <div>
+            <div class="chart-title" id="chart-sources-title">توزیع منابع</div>
+            <div class="chart-meta" id="chart-sources-meta">متوازن</div>
+          </div>
+        </div>
+        <div class="chart-container">
+          <canvas id="sourcesChart"></canvas>
+        </div>
       </div>
     </div>
-
-    <div class="bottom-grid">
-      <div class="chart-card">
-        <div class="card-header"><div class="card-title">وضعیت تجهیزات</div><div class="card-meta" id="machines-meta">۱۰ تجهیز</div></div>
-        <div class="machine-list" id="machine-list"></div>
+    
+    <!-- Efficiency Metrics -->
+    <div class="efficiency-grid">
+      <div class="metric-card" onclick="showMetricDetail('pue')">
+        <div class="metric-icon">📐</div>
+        <div class="metric-name" id="metric-pue-name">Power Usage Effectiveness</div>
+        <div class="metric-value" id="metric-pue">1.68</div>
+        <div class="metric-desc" id="metric-pue-desc">بهره‌وری تا‌سیسات</div>
+        <div class="metric-status" id="metric-pue-status">متوسط</div>
       </div>
-      <div class="chart-card">
-        <div class="card-header"><div class="card-title">هشدارهای زنده</div><div class="card-meta" id="alerts-meta">۲۴ ساعت اخیر</div></div>
-        <div class="alert-feed" id="alert-feed"></div>
+      
+      <div class="metric-card" onclick="showMetricDetail('carbon')">
+        <div class="metric-icon">🌍</div>
+        <div class="metric-name" id="metric-carbon-name">Carbon Footprint</div>
+        <div class="metric-value" id="metric-carbon">1.24</div>
+        <div class="metric-desc" id="metric-carbon-desc">تن CO₂ امروز</div>
+        <div class="metric-status" id="metric-carbon-status">کاهش ۱۲%</div>
+      </div>
+      
+      <div class="metric-card" onclick="showMetricDetail('ratio')">
+        <div class="metric-icon">📊</div>
+        <div class="metric-name" id="metric-ratio-name">Peak-to-Average Ratio</div>
+        <div class="metric-value" id="metric-ratio">2.14</div>
+        <div class="metric-desc" id="metric-ratio-desc">نسبت بار</div>
+        <div class="metric-status" id="metric-ratio-status">بالا</div>
       </div>
     </div>
-
-    <div class="footer-cta">
-      <div>
-        <div class="cta-title">آماده تحلیل هوشمند مصرف انرژی هستید؟</div>
-        <div class="cta-text">این نسخه نمایشی برای نمایش قابلیت‌های پایش، هشدار و تحلیل انرژی صنعتی طراحی شده است.</div>
+    
+    <!-- Machines Section -->
+    <div id="machines">
+      <h2 class="section-title" id="machines-title">دستگاه‌های صنعتی</h2>
+      <div class="machine-list" id="machine-list">
+        <!-- Generated by JS -->
       </div>
-      <a class="cta-btn" href="https://irannethub.com" target="_blank" rel="noopener">ارتباط با ایران نت هاب</a>
+    </div>
+    
+    <!-- Alerts Section -->
+    <div id="alerts">
+      <h2 class="section-title" id="alerts-title">هشدارهای فعال</h2>
+      <div class="alert-list" id="alert-list">
+        <!-- Generated by JS -->
+      </div>
     </div>
   </main>
 </div>
 
+<!-- Modal -->
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="modal-title" id="modal-title">جزئیات</h2>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-details" id="modal-details">
+      <!-- Content generated by JS -->
+    </div>
+  </div>
+</div>
+
 <script>
+// Data
 const MACHINES = [
-  { id:'M01', name:'کمپرسور خط ۱', type:'کمپرسور', baseline:45, max:65 },
-  { id:'M02', name:'کمپرسور خط ۲', type:'کمپرسور', baseline:42, max:60 },
-  { id:'M03', name:'دستگاه CNC A', type:'CNC', baseline:18, max:28 },
-  { id:'M04', name:'دستگاه CNC B', type:'CNC', baseline:17.5, max:27 },
-  { id:'M05', name:'نوار نقاله', type:'انتقال', baseline:12, max:18 },
-  { id:'M06', name:'سیستم تهویه HVAC', type:'تهویه', baseline:35, max:55 },
-  { id:'M07', name:'ایستگاه جوشکاری', type:'جوشکاری', baseline:22, max:40 },
-  { id:'M08', name:'پمپ آب', type:'پمپ', baseline:8.5, max:14 },
-  { id:'M09', name:'سیستم روشنایی', type:'روشنایی', baseline:15, max:17 },
-  { id:'M10', name:'تهویه رنگ', type:'تهویه', baseline:28, max:42 },
+  { id: 'M01', name: 'کمپرسور خط ۱', name_en: 'Compressor Line 1', type: 'کمپرسور', type_en: 'Compressor', baseline: 45, max: 65, category: 'Pneumatic' },
+  { id: 'M02', name: 'کمپرسور خط ۲', name_en: 'Compressor Line 2', type: 'کمپرسور', type_en: 'Compressor', baseline: 42, max: 60, category: 'Pneumatic' },
+  { id: 'M03', name: 'دستگاه CNC-A', name_en: 'CNC Machine A', type: 'ماشین‌کاری', type_en: 'Machining', baseline: 18, max: 28, category: 'Production' },
+  { id: 'M04', name: 'دستگاه CNC-B', name_en: 'CNC Machine B', type: 'ماشین‌کاری', type_en: 'Machining', baseline: 17.5, max: 27, category: 'Production' },
+  { id: 'M05', name: 'نوار نقاله', name_en: 'Conveyor Belt', type: 'انتقال', type_en: 'Transport', baseline: 12, max: 18, category: 'Material Handling' },
+  { id: 'M06', name: 'سیستم HVAC', name_en: 'HVAC System', type: 'تهویه', type_en: 'Ventilation', baseline: 35, max: 55, category: 'Climate Control' },
+  { id: 'M07', name: 'ایستگاه جوشکاری', name_en: 'Welding Station', type: 'جوشکاری', type_en: 'Welding', baseline: 22, max: 40, category: 'Fabrication' },
+  { id: 'M08', name: 'پمپ آب', name_en: 'Water Pump', type: 'پمپ', type_en: 'Pump', baseline: 8.5, max: 14, category: 'Utilities' },
+  { id: 'M09', name: 'سیستم روشنایی', name_en: 'Lighting System', type: 'روشنایی', type_en: 'Lighting', baseline: 15, max: 17, category: 'Utilities' },
+  { id: 'M10', name: 'تهویه رنگ', name_en: 'Paint Exhaust', type: 'تهویه', type_en: 'Ventilation', baseline: 28, max: 42, category: 'Environmental' },
 ];
-const COLORS = ['#00d4ff','#7c3aed','#35d07f','#ffb020','#ff4d6d','#00b4d8','#a855f7','#34d399','#fb923c','#f87171'];
-let machineStates = MACHINES.map(m => ({...m,currentKw:m.baseline*(.85+Math.random()*.3),anomaly:false,status:'running',degradation:1+Math.random()*.05}));
-let totalKwhAccum = 2400 + Math.random()*200;
-let loadHistory = [];
+
+const COLORS = ['#00d4ff', '#7c3aed', '#35d07f', '#ffb020', '#ff4d6d', '#00b4d8', '#a855f7', '#34d399', '#fb923c', '#f87171'];
+
+let currentLanguage = 'fa';
+let machineStates = [];
+let energySources = {};
 let allAlerts = [];
-function gauss(mean,std){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return mean+std*Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v);}
-function updateMachines(){
-  const h=new Date().getHours(); const isNight=h>=22||h<6;
-  machineStates = machineStates.map(m=>{
-    const nightOnly=['تهویه','روشنایی','پمپ'].includes(m.type); const running=isNight?nightOnly:true;
-    let kw=running?Math.max(.5,Math.min(m.max,gauss(m.baseline*m.degradation,m.baseline*.06))):gauss(.3,.1);
-    let anomaly=false, anomalyType=null;
-    if(running && Math.random()<.04){
-      const types=[['جهش ناگهانی مصرف',2.2],['مصرف بالاتر از خط مبنا',1.6],['عدم تعادل فاز',1.35],['اضافه‌بار خطرناک',2.6],['اتلاف در حالت آماده‌به‌کار',.35]];
-      const pick=types[Math.floor(Math.random()*types.length)]; anomalyType=pick[0]; kw*=pick[1]; anomaly=true;
-      const severity=pick[1]>2?'critical':pick[1]>1.5?'high':'medium';
-      const dev=Math.round((pick[1]-1)*100);
-      allAlerts.unshift({machine:m.name,type:anomalyType,severity,kw_actual:kw.toFixed(1),kw_expected:m.baseline.toFixed(1),deviation:dev,time:new Date()});
-      if(allAlerts.length>50) allAlerts.pop();
+let loadHistory = [];
+let sourceHistory = { solar: [], grid: [], ups: [], generator: [] };
+
+// Language strings
+const strings = {
+  fa: {
+    'page-title': 'هوشمند‌سازی انرژی صنعتی',
+    'page-subtitle': 'نظارت بلادرنگ و تحلیل مصرف انرژی کارخانه',
+    'kpi-power-label': 'کل مصرف',
+    'kpi-energy-label': 'انرژی انباشته',
+    'kpi-renewable-label': 'سهم تجدیدپذیر',
+    'kpi-efficiency-label': 'بهره‌وری',
+    'kpi-alerts-label': 'هشدارها',
+    'sources-title': 'منابع انرژی',
+    'source-solar-name': 'پانل‌های خورشیدی',
+    'source-solar-status': 'فعال — ابرهای کم',
+    'source-grid-name': 'برق شبکه',
+    'source-grid-status': 'فعال — هماهنگ',
+    'source-ups-name': 'سیستم UPS',
+    'source-ups-status': 'آماده — شارژ شده',
+    'source-gen-name': 'ژنراتور دیزلی',
+    'source-gen-status': 'آماده — خاموش',
+    'solar-production': 'تولید',
+    'solar-capacity': 'ظرفیت',
+    'grid-consumption': 'مصرف',
+    'grid-tariff': 'نرخ',
+    'ups-charge': 'شارژ',
+    'ups-runtime': 'توانایی',
+    'gen-output': 'خروجی',
+    'gen-fuel': 'سوخت',
+    'chart-load-title': 'تاریخچه مصرف ساعتی',
+    'chart-load-meta': 'آخرین 2 ساعت',
+    'chart-sources-title': 'توزیع منابع',
+    'chart-sources-meta': 'متوازن',
+    'machines-title': 'دستگاه‌های صنعتی',
+    'alerts-title': 'هشدارهای فعال',
+    'metric-pue-name': 'Power Usage Effectiveness',
+    'metric-pue-desc': 'بهره‌وری تا‌سیسات',
+    'metric-pue-status': 'متوسط',
+    'metric-carbon-name': 'Carbon Footprint',
+    'metric-carbon-desc': 'تن CO₂ امروز',
+    'metric-carbon-status': 'کاهش ۱۲%',
+    'metric-ratio-name': 'Peak-to-Average Ratio',
+    'metric-ratio-desc': 'نسبت بار',
+    'metric-ratio-status': 'بالا',
+    'status-text': 'سیستم فعال',
+    'sidebar-footer': 'نسخه نمایشی v1.0 — 2025',
+    'logo-text': 'Hyneto Energy',
+    'logo-subtext': 'عقل صنعت',
+    'nav-label-main': 'پیمایش',
+    'nav-overview': 'پیش‌نمایش',
+    'nav-sources': 'منابع انرژی',
+    'nav-machines': 'دستگاه‌ها',
+    'nav-alerts': 'هشدارها',
+  },
+  en: {
+    'page-title': 'Industrial Energy Intelligence',
+    'page-subtitle': 'Real-time monitoring & analysis of factory energy consumption',
+    'kpi-power-label': 'Total Consumption',
+    'kpi-energy-label': 'Cumulative Energy',
+    'kpi-renewable-label': 'Renewable Share',
+    'kpi-efficiency-label': 'Efficiency',
+    'kpi-alerts-label': 'Alerts',
+    'sources-title': 'Energy Sources',
+    'source-solar-name': 'Solar Panels',
+    'source-solar-status': 'Active — Light clouds',
+    'source-grid-name': 'Grid Power',
+    'source-grid-status': 'Active — Synchronized',
+    'source-ups-name': 'UPS System',
+    'source-ups-status': 'Ready — Charged',
+    'source-gen-name': 'Diesel Generator',
+    'source-gen-status': 'Ready — Off',
+    'solar-production': 'Production',
+    'solar-capacity': 'Capacity',
+    'grid-consumption': 'Consumption',
+    'grid-tariff': 'Rate',
+    'ups-charge': 'Charge',
+    'ups-runtime': 'Runtime',
+    'gen-output': 'Output',
+    'gen-fuel': 'Fuel',
+    'chart-load-title': 'Hourly Consumption History',
+    'chart-load-meta': 'Last 2 hours',
+    'chart-sources-title': 'Source Distribution',
+    'chart-sources-meta': 'Balanced',
+    'machines-title': 'Industrial Equipment',
+    'alerts-title': 'Active Alerts',
+    'metric-pue-name': 'Power Usage Effectiveness',
+    'metric-pue-desc': 'Facility efficiency',
+    'metric-pue-status': 'Average',
+    'metric-carbon-name': 'Carbon Footprint',
+    'metric-carbon-desc': 'Tons CO₂ today',
+    'metric-carbon-status': '↓ 12% decrease',
+    'metric-ratio-name': 'Peak-to-Average Ratio',
+    'metric-ratio-desc': 'Load ratio',
+    'metric-ratio-status': 'High',
+    'status-text': 'System Active',
+    'sidebar-footer': 'Demo Version v1.0 — 2025',
+    'logo-text': 'Hyneto Energy',
+    'logo-subtext': 'Factory Intelligence',
+    'nav-label-main': 'Navigation',
+    'nav-overview': 'Overview',
+    'nav-sources': 'Energy Sources',
+    'nav-machines': 'Equipment',
+    'nav-alerts': 'Alerts',
+  }
+};
+
+function setLanguage(lang) {
+  currentLanguage = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
+  
+  document.getElementById('lang-fa').classList.toggle('active', lang === 'fa');
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  
+  Object.entries(strings[lang]).forEach(([id, text]) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  });
+  
+  updateDisplay();
+}
+
+function gauss(mean, std) {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return mean + std * Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+}
+
+function initializeMachines() {
+  machineStates = MACHINES.map((m, i) => ({
+    ...m,
+    currentKw: m.baseline * (0.85 + Math.random() * 0.3),
+    anomaly: false,
+    status: 'running',
+    color: COLORS[i % COLORS.length]
+  }));
+}
+
+function initializeEnergySources() {
+  energySources = {
+    solar: { name: 'Solar', power: 85, max: 120, percentage: 72 },
+    grid: { name: 'Grid', power: 140, max: 240, percentage: 58 },
+    ups: { name: 'UPS', charge: 94, max: 100, percentage: 94 },
+    generator: { name: 'Generator', power: 0, max: 150, percentage: 0 }
+  };
+}
+
+function updateMachines() {
+  const h = new Date().getHours();
+  const isNight = h >= 22 || h < 6;
+  
+  machineStates = machineStates.map(m => {
+    const nightOnly = ['تهویه', 'روشنایی', 'پمپ'].includes(m.type);
+    const running = isNight ? nightOnly : true;
+    
+    let kw = running ? Math.max(0.5, Math.min(m.max, gauss(m.baseline * 1.02, m.baseline * 0.08))) : gauss(0.3, 0.1);
+    let anomaly = false, anomalyType = null;
+    
+    if (running && Math.random() < 0.03) {
+      const types = [
+        ['Power surge', 2.3],
+        ['High consumption', 1.7],
+        ['Phase imbalance', 1.4],
+        ['Dangerous overload', 2.7],
+        ['Standby loss', 0.35]
+      ];
+      const pick = types[Math.floor(Math.random() * types.length)];
+      anomalyType = pick[0];
+      kw *= pick[1];
+      anomaly = true;
+      
+      const severity = pick[1] > 2.2 ? 'critical' : pick[1] > 1.5 ? 'high' : 'medium';
+      const dev = Math.round((pick[1] - 1) * 100);
+      allAlerts.unshift({
+        machine: m.name,
+        type: anomalyType,
+        severity,
+        kw_actual: kw.toFixed(1),
+        kw_expected: m.baseline.toFixed(1),
+        deviation: dev,
+        time: new Date()
+      });
+      if (allAlerts.length > 50) allAlerts.pop();
     }
-    return {...m,currentKw:Math.round(kw*10)/10,anomaly,anomalyType,status:anomaly?'alert':running?'running':'idle'};
+    
+    return { ...m, currentKw: Math.round(kw * 10) / 10, anomaly, status: anomaly ? 'alert' : running ? 'running' : 'idle' };
   });
-  const totalKw=machineStates.reduce((s,m)=>s+m.currentKw,0);
-  totalKwhAccum += totalKw/120;
-  loadHistory.push({time:new Date(),kw:totalKw});
-  if(loadHistory.length>240) loadHistory.shift();
+  
+  const totalKw = machineStates.reduce((s, m) => s + m.currentKw, 0);
+  loadHistory.push({ time: new Date(), kw: totalKw });
+  if (loadHistory.length > 240) loadHistory.shift();
+  
+  // Update energy sources
+  const solar = Math.max(0, 120 * (0.3 + Math.sin(Date.now() / 10000) * 0.7));
+  const grid = Math.max(0, totalKw - solar);
+  
+  energySources.solar.power = Math.round(solar * 10) / 10;
+  energySources.solar.percentage = Math.round((solar / 120) * 100);
+  energySources.grid.power = Math.round(grid * 10) / 10;
+  energySources.grid.percentage = Math.round((grid / 240) * 100);
+  energySources.ups.charge = Math.max(20, Math.min(100, 94 + gauss(0, 2)));
+  
+  sourceHistory.solar.push(energySources.solar.power);
+  sourceHistory.grid.push(energySources.grid.power);
+  if (sourceHistory.solar.length > 120) sourceHistory.solar.shift();
+  if (sourceHistory.grid.length > 120) sourceHistory.grid.shift();
 }
-function updateClock(){
-  const now=new Date();
-  document.getElementById('clock').textContent=now.toLocaleTimeString('en-GB',{hour12:false});
-  document.getElementById('subtitle').textContent=`آخرین بروزرسانی: ${now.toLocaleTimeString('fa-IR')} — بروزرسانی خودکار هر ۳ ثانیه`;
-}
-function renderKPIs(){
-  const totalKw=machineStates.reduce((s,m)=>s+m.currentKw,0);
-  const critical=allAlerts.filter(a=>a.severity==='critical').length;
-  const running=machineStates.filter(m=>m.status!=='idle').length;
-  const anomalyKwh=machineStates.filter(m=>m.anomaly).reduce((s,m)=>s+m.currentKw,0)/120;
-  const costUsd=(totalKwhAccum*.04).toFixed(2), wasteCost=(anomalyKwh*.04*24).toFixed(2);
-  document.getElementById('kpi-kw').textContent=totalKw.toFixed(1);
-  document.getElementById('kpi-kwh').textContent=Math.round(totalKwhAccum).toLocaleString('fa-IR');
-  document.getElementById('kpi-cost').textContent=`حدود $${costUsd} امروز`;
-  document.getElementById('kpi-alerts').textContent=Math.min(allAlerts.length,99).toLocaleString('fa-IR');
-  document.getElementById('kpi-critical').textContent=`${critical.toLocaleString('fa-IR')} بحرانی`;
-  document.getElementById('kpi-machines').textContent=running.toLocaleString('fa-IR');
-  document.getElementById('kpi-waste').textContent=(anomalyKwh*24).toFixed(1);
-  document.getElementById('kpi-waste-cost').textContent=`~$${wasteCost} در روز`;
-  const prev=loadHistory.length>2?loadHistory[loadHistory.length-2].kw:totalKw, delta=totalKw-prev;
-  const el=document.getElementById('kpi-kw-change');
-  el.textContent=`${delta>=0?'↑':'↓'} ${Math.abs(delta).toFixed(1)} kW نسبت به قبل`;
-  el.className='kpi-change '+(delta>5?'up':'down');
-}
-let loadChart,pieChart;
-function initCharts(){
-  const commonFont = {family:'Vazirmatn', size:11};
-  loadChart=new Chart(document.getElementById('loadChart').getContext('2d'),{
-    type:'line',
-    data:{labels:[],datasets:[{label:'کل مصرف kW',data:[],borderColor:'#00d4ff',borderWidth:2,fill:true,backgroundColor:'rgba(0,212,255,.06)',tension:.4,pointRadius:0}]},
-    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:'#8ea3bc',font:commonFont,maxTicksLimit:6},grid:{color:'rgba(80,190,255,.06)'}},y:{ticks:{color:'#8ea3bc',font:commonFont,callback:v=>v.toFixed(0)+' kW'},grid:{color:'rgba(80,190,255,.06)'}}}}
+
+function updateClock() {
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString(currentLanguage === 'fa' ? 'fa-IR' : 'en-GB', {
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
   });
-  pieChart=new Chart(document.getElementById('pieChart').getContext('2d'),{
-    type:'doughnut',
-    data:{labels:MACHINES.map(m=>m.name),datasets:[{data:MACHINES.map(m=>m.baseline),backgroundColor:COLORS,borderWidth:0}]},
-    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},cutout:'70%'}
-  });
+  document.getElementById('time-display').textContent = timeStr;
 }
-function updateCharts(){
-  const recent=loadHistory.slice(-120);
-  loadChart.data.labels=recent.map(r=>r.time.toLocaleTimeString('en-GB',{hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'}));
-  loadChart.data.datasets[0].data=recent.map(r=>r.kw); loadChart.update('none');
-  pieChart.data.datasets[0].data=machineStates.map(m=>m.currentKw); pieChart.update('none');
+
+function renderKPIs() {
+  const totalKw = machineStates.reduce((s, m) => s + m.currentKw, 0);
+  const totalKwh = loadHistory.length > 0 ? loadHistory.reduce((s, h) => s + h.kw / 120, 0) : 0;
+  const critical = allAlerts.filter(a => a.severity === 'critical').length;
+  const renewable = Math.round((energySources.solar.power / (energySources.solar.power + energySources.grid.power)) * 100);
+  
+  document.getElementById('kpi-power').textContent = Math.round(totalKw);
+  document.getElementById('kpi-energy').textContent = Math.round(totalKwh * 100);
+  document.getElementById('kpi-renewable').textContent = renewable;
+  document.getElementById('kpi-efficiency').textContent = (70 + Math.random() * 20).toFixed(0);
+  document.getElementById('kpi-alerts-count').textContent = Math.min(allAlerts.length, 99);
+  document.getElementById('kpi-alerts-change').textContent = `${critical} بحرانی | ${allAlerts.length - critical} اخطار`;
 }
-function renderMachines(){
-  const sorted=[...machineStates].sort((a,b)=>b.currentKw-a.currentKw), maxKw=Math.max(...machineStates.map(m=>m.max));
-  document.getElementById('machine-list').innerHTML=sorted.map(m=>{
-    const pct=Math.min(100,(m.currentKw/maxKw)*100), color=m.anomaly?'#ff4d6d':m.currentKw>m.baseline*1.2?'#ffb020':'#00d4ff';
-    const label=m.status==='alert'?'⚡ هشدار':m.status==='running'?'فعال':'خاموش';
-    return `<div class="machine-row ${m.anomaly?'anomaly':''}">
-      <div><div class="machine-name">${m.name}</div><div class="machine-type">${m.type}</div></div>
-      <div class="kw-bar-wrap"><div style="font-size:11px;color:${color};font-weight:800">${m.currentKw.toFixed(1)} kW</div><div class="kw-bar-track"><div class="kw-bar-fill" style="width:${pct}%;background:${color}"></div></div></div>
-      <div class="status-pill ${m.status}">${label}</div>
+
+let loadChart, sourcesChart;
+
+function initCharts() {
+  const ctxLoad = document.getElementById('loadChart');
+  const ctxSources = document.getElementById('sourcesChart');
+  
+  if (ctxLoad && !loadChart) {
+    loadChart = new Chart(ctxLoad.getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [{
+          label: 'Total kW',
+          data: [],
+          borderColor: '#00d4ff',
+          borderWidth: 2,
+          fill: true,
+          backgroundColor: 'rgba(0, 212, 255, 0.06)',
+          tension: 0.4,
+          pointRadius: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(0, 212, 255, 0.05)' } },
+          y: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(0, 212, 255, 0.05)' } }
+        }
+      }
+    });
+  }
+  
+  if (ctxSources && !sourcesChart) {
+    sourcesChart = new Chart(ctxSources.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Solar', 'Grid', 'UPS'],
+        datasets: [{
+          data: [85, 140, 0],
+          backgroundColor: ['#eab308', '#6b7280', '#a855f7'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: false,
+        plugins: { legend: { display: false } },
+        cutout: '70%'
+      }
+    });
+  }
+}
+
+function updateCharts() {
+  if (loadChart && loadHistory.length > 0) {
+    const recent = loadHistory.slice(-60);
+    loadChart.data.labels = recent.map(r => r.time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+    loadChart.data.datasets[0].data = recent.map(r => r.kw);
+    loadChart.update('none');
+  }
+  
+  if (sourcesChart) {
+    sourcesChart.data.datasets[0].data = [energySources.solar.power, energySources.grid.power, 0];
+    sourcesChart.update('none');
+  }
+}
+
+function renderMachines() {
+  const sorted = [...machineStates].sort((a, b) => b.currentKw - a.currentKw);
+  const maxKw = Math.max(...machineStates.map(m => m.max));
+  
+  document.getElementById('machine-list').innerHTML = sorted.map(m => {
+    const pct = Math.min(100, (m.currentKw / maxKw) * 100);
+    const color = m.anomaly ? '#ef4444' : m.currentKw > m.baseline * 1.2 ? '#f97316' : '#00d4ff';
+    const statusLabel = m.status === 'alert' ? '⚡ Alert' : m.status === 'running' ? '✓ Running' : '○ Idle';
+    
+    return `<div class="machine-card" onclick="showMachineDetail('${m.id}')">
+      <div class="machine-header">
+        <div>
+          <div class="machine-name">${currentLanguage === 'fa' ? m.name : m.name_en}</div>
+          <div class="machine-type">${currentLanguage === 'fa' ? m.type : m.type_en}</div>
+        </div>
+        <div class="machine-status ${m.status}">${statusLabel}</div>
+      </div>
+      <div class="machine-power">
+        <div class="power-value">${m.currentKw.toFixed(1)} kW</div>
+      </div>
+      <div class="power-bar">
+        <div class="power-fill" style="width: ${pct}%; background: ${color};"></div>
+      </div>
     </div>`;
   }).join('');
 }
-const EMOJI={critical:'🚨',high:'🔴',medium:'🟠',low:'🟡'};
-function renderAlerts(){
-  const feed=document.getElementById('alert-feed');
-  if(!allAlerts.length){feed.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px">فعلاً هشدار فعالی وجود ندارد — وضعیت سیستم پایدار است.</div>'; return;}
-  document.getElementById('alerts-meta').textContent=`${allAlerts.length.toLocaleString('fa-IR')} هشدار`;
-  feed.innerHTML=allAlerts.slice(0,20).map(a=>`<div class="alert-item ${a.severity}">
-    <div class="alert-header"><span class="alert-machine">${EMOJI[a.severity]} ${a.machine}</span><span class="alert-time">${a.time.toLocaleTimeString('en-GB',{hour12:false})}</span></div>
-    <div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><span class="alert-msg">${a.type}</span><span class="alert-deviation">+${a.deviation}% / ${a.kw_actual}kW</span></div>
+
+function renderAlerts() {
+  const feed = document.getElementById('alert-list');
+  if (!allAlerts.length) {
+    feed.innerHTML = '<div style="color: var(--text-muted); font-size: 13px; padding: 20px; text-align: center;">No active alerts — System stable</div>';
+    return;
+  }
+  
+  const emoji = { critical: '🚨', high: '🔴', medium: '🟠', low: '🟡' };
+  feed.innerHTML = allAlerts.slice(0, 15).map(a => `<div class="alert-item ${a.severity}">
+    <div class="alert-header">
+      <span class="alert-machine">${emoji[a.severity]} ${a.machine}</span>
+      <span class="alert-time">${a.time.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
+    </div>
+    <div class="alert-message">${a.type}</div>
+    <div class="alert-deviation">+${a.deviation}% — ${a.kw_actual} kW</div>
   </div>`).join('');
 }
-function seedHistory(){const now=Date.now();for(let i=239;i>=0;i--){const t=new Date(now-i*30000),h=t.getHours(),base=h>=8&&h<20?220:80;loadHistory.push({time:t,kw:gauss(base,15)})}}
-function tick(){updateMachines();updateClock();renderKPIs();updateCharts();renderMachines();renderAlerts();}
-seedHistory(); initCharts(); tick(); setInterval(tick,3000);
+
+function updateDisplay() {
+  updateClock();
+  renderKPIs();
+  updateCharts();
+  renderMachines();
+  renderAlerts();
+}
+
+function tick() {
+  updateMachines();
+  updateDisplay();
+}
+
+function showMachineDetail(id) {
+  const machine = machineStates.find(m => m.id === id);
+  if (!machine) return;
+  
+  const title = currentLanguage === 'fa' ? machine.name : machine.name_en;
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-details').innerHTML = `
+    <div class="detail-row">
+      <div class="detail-label">${currentLanguage === 'fa' ? 'نوع' : 'Type'}:</div>
+      <div class="detail-value">${currentLanguage === 'fa' ? machine.type : machine.type_en}</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">${currentLanguage === 'fa' ? 'مصرف فعلی' : 'Current'}:</div>
+      <div class="detail-value">${machine.currentKw.toFixed(1)} kW</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">${currentLanguage === 'fa' ? 'مصرف مبنا' : 'Baseline'}:</div>
+      <div class="detail-value">${machine.baseline} kW</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">${currentLanguage === 'fa' ? 'حداکثر' : 'Maximum'}:</div>
+      <div class="detail-value">${machine.max} kW</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-label">${currentLanguage === 'fa' ? 'وضعیت' : 'Status'}:</div>
+      <div class="detail-value">${machine.status === 'alert' ? '⚡ Alert' : machine.status === 'running' ? '✓ Running' : '○ Idle'}</div>
+    </div>
+  `;
+  document.getElementById('modal').classList.add('active');
+}
+
+function showSourceDetail(source) {
+  const data = energySources[source];
+  const sourceNames = { solar: 'Solar Panels', grid: 'Grid Power', ups: 'UPS System', generator: 'Generator' };
+  
+  document.getElementById('modal-title').textContent = sourceNames[source];
+  const details = source === 'ups' ? 
+    `<div class="detail-row"><div class="detail-label">Charge Level:</div><div class="detail-value">${Math.round(data.charge)}%</div></div>
+     <div class="detail-row"><div class="detail-label">Runtime:</div><div class="detail-value">2.5 hours</div></div>
+     <div class="detail-row"><div class="detail-label">Status:</div><div class="detail-value">Ready</div></div>` :
+    source === 'generator' ?
+    `<div class="detail-row"><div class="detail-label">Output:</div><div class="detail-value">${data.power} kW</div></div>
+     <div class="detail-row"><div class="detail-label">Fuel Tank:</div><div class="detail-value">450 liters</div></div>
+     <div class="detail-row"><div class="detail-label">Status:</div><div class="detail-value">Ready (Off)</div></div>` :
+    `<div class="detail-row"><div class="detail-label">Production:</div><div class="detail-value">${data.power} kW</div></div>
+     <div class="detail-row"><div class="detail-label">Capacity:</div><div class="detail-value">${data.max} kWp</div></div>
+     <div class="detail-row"><div class="detail-label">Efficiency:</div><div class="detail-value">${Math.round((data.power/data.max)*100)}%</div></div>`;
+  
+  document.getElementById('modal-details').innerHTML = details;
+  document.getElementById('modal').classList.add('active');
+}
+
+function showKPIDetail(kpi) {
+  const details = {
+    'total-power': `<div class="detail-row"><div class="detail-label">Current:</div><div class="detail-value">${Math.round(machineStates.reduce((s,m)=>s+m.currentKw,0))} kW</div></div>
+                    <div class="detail-row"><div class="detail-label">Average:</div><div class="detail-value">${Math.round(loadHistory.reduce((s,h)=>s+h.kw,0)/Math.max(1,loadHistory.length))} kW</div></div>`,
+    'total-energy': `<div class="detail-row"><div class="detail-label">Today:</div><div class="detail-value">${Math.round(loadHistory.reduce((s,h)=>s+h.kw/120,0)*100)} kWh</div></div>`,
+    'renewable': `<div class="detail-row"><div class="detail-label">Solar:</div><div class="detail-value">${energySources.solar.power.toFixed(1)} kW</div></div>
+                  <div class="detail-row"><div class="detail-label">Grid:</div><div class="detail-value">${energySources.grid.power.toFixed(1)} kW</div></div>`,
+    'efficiency': `<div class="detail-row"><div class="detail-label">PUE:</div><div class="detail-value">1.68</div></div>
+                  <div class="detail-row"><div class="detail-label">Status:</div><div class="detail-value">Good balance</div></div>`,
+    'alerts': `<div class="detail-row"><div class="detail-label">Critical:</div><div class="detail-value">${allAlerts.filter(a=>a.severity==='critical').length}</div></div>
+               <div class="detail-row"><div class="detail-label">High:</div><div class="detail-value">${allAlerts.filter(a=>a.severity==='high').length}</div></div>`
+  };
+  
+  document.getElementById('modal-title').textContent = 'KPI Details';
+  document.getElementById('modal-details').innerHTML = details[kpi] || 'No data';
+  document.getElementById('modal').classList.add('active');
+}
+
+function showMetricDetail(metric) {
+  const details = {
+    'pue': `<div class="detail-row"><div class="detail-label">Definition:</div><div class="detail-value">Total facility power / IT equipment power</div></div>
+            <div class="detail-row"><div class="detail-label">Rating:</div><div class="detail-value">1.0 = Perfect | 1.67+ = Average</div></div>`,
+    'carbon': `<div class="detail-row"><div class="detail-label">Today:</div><div class="detail-value">1.24 tons CO₂</div></div>
+               <div class="detail-row"><div class="detail-label">Change:</div><div class="detail-value">↓ 12% vs yesterday</div></div>`,
+    'ratio': `<div class="detail-row"><div class="detail-label">Peak Load:</div><div class="detail-value">268 kW</div></div>
+              <div class="detail-row"><div class="detail-label">Average Load:</div><div class="detail-value">125 kW</div></div>`
+  };
+  
+  document.getElementById('modal-title').textContent = 'Metric Details';
+  document.getElementById('modal-details').innerHTML = details[metric] || 'No data';
+  document.getElementById('modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+function scrollToSection(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Initialize
+function init() {
+  initializeMachines();
+  initializeEnergySources();
+  initCharts();
+  setLanguage('fa');
+  tick();
+  setInterval(tick, 3000);
+}
+
+// Close modal on background click
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('modal')) closeModal();
+});
+
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
